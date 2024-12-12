@@ -210,9 +210,10 @@ function findParagraphs() {
 
     const paragraphProperties = getMostCommonProperties(longestElements.slice(0, 50)).slice(0, 2);
     const paragraphTags = paragraphProperties.map(x => x.tagName);
+    const paragraphXPositions = longestElements.map(x => x.getBoundingClientRect().x);
     if (paragraphsParent) {
-        [... paragraphsParent.children].filter(x => x.offsetParent !== null && x.offsetWidth !== 0 && x.offsetHeight !== 0 && x.textContent.trim().length && !x.classList.value.includes('heralder')).forEach(child => {
-            if (paragraphTags.includes(child.tagName)) {
+        [... paragraphsParent.querySelectorAll(paragraphTags.join(', ') + ', h1, h2, h3, h4, h5')].filter(x => x.offsetParent !== null && x.offsetWidth !== 0 && x.offsetHeight !== 0 && x.textContent.trim().length && !x.classList.value.includes('heralder')).forEach(child => {
+            if (paragraphTags.includes(child.tagName) && !child.closest('.heralder-paragraph') && paragraphXPositions.includes(child.getBoundingClientRect().x)) {
                 const style = window.getComputedStyle(child);
                 const fontFamily = style.getPropertyValue('font-family');
                 const fontSize = style.getPropertyValue('font-size');
